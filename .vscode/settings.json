@@ -1,0 +1,14 @@
+{
+  "files.exclude": {
+    "**/.git": true,
+    "**/.DS_Store": true,
+  },
+  "editor.wordWrap": "on",
+  "prettier.singleQuote": true,
+  "prettier.printWidth": 100,
+  "html.format.enable": false,
+  "javascript.preferences.quoteStyle": "single",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true
+}
