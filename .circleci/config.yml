@@ -2,6 +2,8 @@ version: 2
 
 jobs:
   lint:
+    parallelism: 1
+
     docker:
       - image: circleci/node:10.15
 
@@ -63,11 +65,17 @@ workflows:
   version: 2
   main:
     jobs:
-      - lint
+      - lint:
+          filters:
+            tags:
+              only: /.*/
 
       - build:
           requires:
             - lint
+          filters:
+            tags:
+              only: /.*/
 
       - push_latest:
           requires:
