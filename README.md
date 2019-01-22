@@ -18,7 +18,7 @@ Example usage via Docker Compose:
 version: '3.7'
 services:
   mock_user_service:
-    image: quay.io/appvia/mock-oidc-user-server:v0.0.1
+    image: quay.io/appvia/mock-oidc-user-server:v0.0.2
     environment:
       - PORT=9090
       - CLIENT_ID=my-client

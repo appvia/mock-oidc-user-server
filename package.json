@@ -1,6 +1,6 @@
 {
   "name": "mock-oidc-user-server",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "description": "A mock user server providing OpenID Connect (OIDC) flows for local development and testing. DO NOT USE IN PRODUCTION!",
   "main": "server.js",
   "author": "Jiten Bhagat",
