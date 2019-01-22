@@ -63,11 +63,17 @@ workflows:
   version: 2
   main:
     jobs:
-      - lint
+      - lint:
+          filters:
+            tags:
+              only: /.*/
 
       - build:
           requires:
             - lint
+          filters:
+            tags:
+              only: /.*/
 
       - push_latest:
           requires:
