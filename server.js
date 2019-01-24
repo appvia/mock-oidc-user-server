@@ -13,6 +13,25 @@ const config = ['CLIENT_ID', 'CLIENT_SECRET', 'CLIENT_REDIRECT_URI'].reduce((acc
   return acc;
 }, {});
 
+/* eslint-disable no-unused-vars */
+async function findById(ctx, sub, token) {
+  // Using the built in dev interactions in node-oidc-provider,
+  // we expect `sub` to be an email address here.
+  return {
+    accountId: sub,
+    async claims(use, scope, claims, rejected) {
+      const username = sub.split('@')[0];
+      return {
+        sub,
+        email: sub,
+        name: username,
+        preferred_username: username
+      };
+    }
+  };
+}
+/* eslint-enable no-unused-vars */
+
 const oidcConfig = {
   features: {
     devInteractions: true,
@@ -21,11 +40,16 @@ const oidcConfig = {
     revocation: true,
     sessionManagement: false
   },
-  format: {
+  formats: {
     default: 'jwt',
     AccessToken: 'jwt',
     RefreshToken: 'jwt'
-  }
+  },
+  claims: {
+    email: ['email'],
+    profile: ['name', 'preferred_username']
+  },
+  findById
 };
 
 const oidc = new Provider(`http://localhost:${port}`, oidcConfig);
