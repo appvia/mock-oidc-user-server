@@ -35,17 +35,21 @@ async function findById(ctx, sub, token) {
 const oidcConfig = {
   features: {
     devInteractions: true,
+
+    claimsParameter: true,
     discovery: true,
     registration: false,
     revocation: true,
-    sessionManagement: false
+    sessionManagement: true
   },
   formats: {
-    default: 'jwt',
+    default: 'opaque',
     AccessToken: 'jwt',
+    AuthorizationCode: 'jwt',
     RefreshToken: 'jwt'
   },
   claims: {
+    openid: ['sub'],
     email: ['email'],
     profile: ['name', 'preferred_username']
   },
@@ -65,6 +69,8 @@ const clients = [
 let server;
 (async () => {
   await oidc.initialize({ clients });
+
+  oidc.proxy = true;
 
   server = oidc.listen(port, () => {
     console.log(
