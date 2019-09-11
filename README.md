@@ -24,6 +24,7 @@ services:
       - CLIENT_ID=my-client
       - CLIENT_SECRET=my-secret
       - CLIENT_REDIRECT_URI=http://localhost:8080/cb
+      - CLIENT_LOGOUT_REDIRECT_URI=http://localhost:8080
     ports:
       - 9090:9090
 ```
