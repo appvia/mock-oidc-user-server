@@ -7,7 +7,7 @@ const Provider = require('oidc-provider');
 
 const port = process.env.PORT || 3000;
 
-const config = ['CLIENT_ID', 'CLIENT_SECRET', 'CLIENT_REDIRECT_URI'].reduce((acc, v) => {
+const config = ['CLIENT_ID', 'CLIENT_SECRET', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'].reduce((acc, v) => {
   assert(process.env[v], `${v} config missing`);
   acc[camelCase(v)] = process.env[v];
   return acc;
@@ -34,7 +34,8 @@ const clients = [
   {
     client_id: config.clientId,
     client_secret: config.clientSecret,
-    redirect_uris: [config.clientRedirectUri]
+    redirect_uris: [config.clientRedirectUri],
+    post_logout_redirect_uris: [config.clientLogoutRedirectUri]
   }
 ];
 
