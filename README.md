@@ -32,12 +32,12 @@ services:
 Prerequisites:
 
 - NodeJS (v10.15.0+)
-- Yarn
+- npm
 
 To install dependencies:
 
 ```shell
-yarn install
+npm install
 ```
 
 To build the Docker image locally:
