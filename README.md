@@ -1,5 +1,7 @@
 # mock-oidc-user-server
 
+Forked from https://github.com/appvia/mock-oidc-user-server
+
 | WARNING: DO NOT USE IN PRODUCTION |
 | --------------------------------- |
 
@@ -7,6 +9,8 @@
 A mock user server providing OpenID Connect (OIDC) flows for development and testing.
 
 Uses the excellent [node-oidc-provider](https://github.com/panva/node-oidc-provider), which comes with dev interactions/flows out of the box (OIDC compliant). Any username and password combination is permitted for logging in, making this very useful for development and CI.
+
+Using implicit grant flow with "id_token token" request type, and returns a {sub:id, name:id} in the id_token and user_info endpoints.
 
 ## Usage
 
