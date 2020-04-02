@@ -23,5 +23,5 @@ jobs:
         uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
         with:
           name: gridsuite/oidc-mock-server
-          username: gridsuiteci
+          username: jonenst
           password: ${{ secrets.DOCKERHUB_TOKEN }}
