@@ -1,7 +1,5 @@
 # mock-oidc-user-server
 
-[![Build_Status](https://circleci.com/gh/appvia/mock-oidc-user-server.svg?style=svg)](https://circleci.com/gh/appvia/mock-oidc-user-server) [![Docker Repository on Quay](https://quay.io/repository/appvia/mock-oidc-user-server/status 'Docker Repository on Quay')](https://quay.io/repository/appvia/mock-oidc-user-server)
-
 | WARNING: DO NOT USE IN PRODUCTION |
 | --------------------------------- |
 
@@ -18,7 +16,7 @@ Example usage via Docker Compose:
 version: '3.7'
 services:
   mock_user_service:
-    image: quay.io/appvia/mock-oidc-user-server:v0.0.2
+    image: gridsuite/gridsuite-oidc-mock-server:v0.0.1
     environment:
       - PORT=9090
       - CLIENT_ID=my-client
@@ -45,5 +43,5 @@ yarn install
 To build the Docker image locally:
 
 ```shell
-docker build -t mock-oidc-user-server .
+docker build -t gridsuite-oidc-mock-server .
 ```

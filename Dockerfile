@@ -1,8 +1,5 @@
 FROM node:10.15-alpine
 
-LABEL maintainer="info@appvia.io"
-LABEL source="https://github.com/appvia/mock-oidc-user-server"
-
 WORKDIR /app
 
 # Update packages in base image
