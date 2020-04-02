@@ -20,7 +20,6 @@ services:
     environment:
       - PORT=9090
       - CLIENT_ID=my-client
-      - CLIENT_SECRET=my-secret
       - CLIENT_REDIRECT_URI=http://localhost:8080/cb
       - CLIENT_LOGOUT_REDIRECT_URI=http://localhost:8080
     ports:
