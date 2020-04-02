@@ -14,42 +14,40 @@ const config = ['CLIENT_ID', 'CLIENT_SECRET', 'CLIENT_REDIRECT_URI', 'CLIENT_LOG
 }, {});
 
 const oidcConfig = {
-  features: {
-    devInteractions: true,
-    discovery: true,
-    registration: false,
-    revocation: true,
-    sessionManagement: false
+  async findAccount(ctx, id) {
+    return {
+      accountId: id,
+      async claims() { return { sub: id, name: id }; },
+    };
   },
-  format: {
-    default: 'jwt',
-    AccessToken: 'jwt',
-    RefreshToken: 'jwt'
-  }
+  claims: {
+    openid: [
+      'sub', 'name'
+    ],
+  },
+  responseTypes: ['id_token token'],
+  clients: [{
+    client_id: config.clientId,
+    response_types: ['id_token token'],
+    grant_types: ['implicit'],
+    client_secret: config.clientSecret,
+    redirect_uris: [config.clientRedirectUri],
+    post_logout_redirect_uris: [config.clientLogoutRedirectUri]
+  }],
 };
 
 const oidc = new Provider(`http://localhost:${port}`, oidcConfig);
 
-const clients = [
-  {
-    client_id: config.clientId,
-    client_secret: config.clientSecret,
-    redirect_uris: [config.clientRedirectUri],
-    post_logout_redirect_uris: [config.clientLogoutRedirectUri]
+const { invalidate: orig } = oidc.Client.Schema.prototype;
+
+oidc.Client.Schema.prototype.invalidate = function invalidate(message, code) {
+  if (code === 'implicit-force-https' || code === 'implicit-forbid-localhost') {
+    return;
   }
-];
 
-let server;
-(async () => {
-  await oidc.initialize({ clients });
+  orig.call(this, message);
+};
 
-  server = oidc.listen(port, () => {
-    console.log(
-      `mock-oidc-user-server listening on port ${port}, check http://localhost:${port}/.well-known/openid-configuration`
-    );
-  });
-})().catch(err => {
-  if (server && server.listening) server.close();
-  console.error(err);
-  process.exitCode = 1;
+oidc.listen(port, () => {
+  console.log(`mock-oidc-user-server listening on port ${port}, check http://localhost:${port}/.well-known/openid-configuration`);
 });
