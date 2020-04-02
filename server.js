@@ -2,8 +2,9 @@
 
 const assert = require('assert');
 const camelCase = require('camelcase');
-
 const Provider = require('oidc-provider');
+const Koa = require('koa');
+const mount = require('koa-mount');
 
 const port = process.env.PORT || 3000;
 
@@ -12,6 +13,9 @@ const config = ['CLIENT_ID', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'
   acc[camelCase(v)] = process.env[v];
   return acc;
 }, {});
+
+config.host = process.env.ISSUER_HOST || 'localhost';
+config.prefix = process.env.ISSUER_PREFIX || '/';
 
 const oidcConfig = {
   async findAccount(ctx, id) {
@@ -36,7 +40,7 @@ const oidcConfig = {
   }],
 };
 
-const oidc = new Provider(`http://localhost:${port}`, oidcConfig);
+const oidc = new Provider(`http://${config.host}${config.prefix}`, oidcConfig);
 
 const { invalidate: orig } = oidc.Client.Schema.prototype;
 
@@ -48,6 +52,7 @@ oidc.Client.Schema.prototype.invalidate = function invalidate(message, code) {
   orig.call(this, message);
 };
 
-oidc.listen(port, () => {
-  console.log(`mock-oidc-user-server listening on port ${port}, check http://localhost:${port}/.well-known/openid-configuration`);
-});
+const app = new Koa();
+app.use(mount(config.prefix, oidc.app));
+
+app.listen(port);

@@ -30,6 +30,12 @@ services:
       - 9090:9090
 ```
 
+Behind a reverse proxy at http://myhost/myprefix/.well-known/openid-configuration
+```yaml
+      - HOST=myhost
+      - prefix=/myprefix
+```
+
 ## Dev
 
 Prerequisites:
