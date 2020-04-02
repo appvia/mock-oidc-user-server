@@ -1,0 +1,27 @@
+name: CI
+
+on: [push]
+
+jobs:
+  build-and-deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v2 # If you're using actions/checkout@v2 you must set persist-credentials to false in most cases for the deployment to work correctly.
+        with:
+          persist-credentials: false
+
+      - name: Install and Build
+        run: |
+          npm install
+          npm run-script lint
+
+      - name: Build and publish Docker image
+        if: github.ref == 'refs/heads/master'
+        uses: elgohr/Publish-Docker-Github-Action@b2f63259b466ca5a4be395c392546de447450334
+        with:
+          name: gridsuite/oidc-mock-server
+          username: gridsuiteci
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
