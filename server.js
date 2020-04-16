@@ -16,6 +16,11 @@ const config = ['CLIENT_ID', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'
 
 config.host = process.env.ISSUER_HOST || 'localhost';
 config.prefix = process.env.ISSUER_PREFIX || '/';
+if (process.env.CLIENT_SILENT_REDIRECT_URI) {
+  config.clientSilentRedirectUri = process.env.CLIENT_SILENT_REDIRECT_URI;
+}
+
+config.redirect_uris = [config.clientRedirectUri, config.clientSilentRedirectUri].filter(Boolean);
 
 const oidcConfig = {
   async findAccount(ctx, id) {
@@ -34,7 +39,7 @@ const oidcConfig = {
     client_id: config.clientId,
     response_types: ['id_token token'],
     grant_types: ['implicit'],
-    redirect_uris: [config.clientRedirectUri],
+    redirect_uris: config.redirect_uris,
     token_endpoint_auth_method: 'none',
     post_logout_redirect_uris: [config.clientLogoutRedirectUri]
   }],
