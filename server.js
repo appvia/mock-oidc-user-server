@@ -8,19 +8,27 @@ const mount = require('koa-mount');
 
 const port = process.env.PORT || 3000;
 
-const config = ['CLIENT_ID', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'].reduce((acc, v) => {
+const configClient1 = ['CLIENT_ID', 'CLIENT_REDIRECT_URI', 'CLIENT_LOGOUT_REDIRECT_URI'].reduce((acc, v) => {
   assert(process.env[v], `${v} config missing`);
   acc[camelCase(v)] = process.env[v];
   return acc;
 }, {});
 
-config.host = process.env.ISSUER_HOST || 'localhost';
-config.prefix = process.env.ISSUER_PREFIX || '/';
 if (process.env.CLIENT_SILENT_REDIRECT_URI) {
-  config.clientSilentRedirectUri = process.env.CLIENT_SILENT_REDIRECT_URI;
+  configClient1.clientSilentRedirectUri = process.env.CLIENT_SILENT_REDIRECT_URI;
 }
 
-config.redirect_uris = [config.clientRedirectUri, config.clientSilentRedirectUri].filter(Boolean);
+const configClient2 = ['CLIENT_ID_2', 'CLIENT_REDIRECT_URI_2', 'CLIENT_LOGOUT_REDIRECT_URI_2', 'CLIENT_SILENT_REDIRECT_URI_2'].reduce((acc, v) => {
+  //Optional Client
+  acc[camelCase(v)] = process.env[v];
+  return acc;
+}, {});
+
+configClient1.host = process.env.ISSUER_HOST || 'localhost';
+configClient1.prefix = process.env.ISSUER_PREFIX || '/';
+
+configClient1.redirect_uris = [configClient1.clientRedirectUri, configClient1.clientSilentRedirectUri].filter(Boolean);
+configClient2.redirect_uris = [configClient2.clientRedirectUri, configClient2.clientSilentRedirectUri].filter(Boolean);
 
 const oidcConfig = {
   async findAccount(ctx, id) {
@@ -36,16 +44,23 @@ const oidcConfig = {
   },
   responseTypes: ['id_token token'],
   clients: [{
-    client_id: config.clientId,
+    client_id: configClient1.clientId,
     response_types: ['id_token token'],
     grant_types: ['implicit'],
-    redirect_uris: config.redirect_uris,
+    redirect_uris: configClient1.redirect_uris,
     token_endpoint_auth_method: 'none',
-    post_logout_redirect_uris: [config.clientLogoutRedirectUri]
+    post_logout_redirect_uris: [configClient1.clientLogoutRedirectUri]
+  }, {
+    client_id: configClient2.clientId,
+    response_types: ['id_token token'],
+    grant_types: ['implicit'],
+    redirect_uris: configClient2.redirect_uris,
+    token_endpoint_auth_method: 'none',
+    post_logout_redirect_uris: [configClient2.clientLogoutRedirectUri]
   }],
 };
 
-const oidc = new Provider(`http://${config.host}${config.prefix}`, oidcConfig);
+const oidc = new Provider(`http://${configClient1.host}${configClient1.prefix}`, oidcConfig);
 
 const { invalidate: orig } = oidc.Client.Schema.prototype;
 
@@ -58,6 +73,6 @@ oidc.Client.Schema.prototype.invalidate = function invalidate(message, code) {
 };
 
 const app = new Koa();
-app.use(mount(config.prefix, oidc.app));
+app.use(mount(configClient1.prefix, oidc.app));
 
 app.listen(port);
