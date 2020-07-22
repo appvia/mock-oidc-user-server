@@ -36,9 +36,17 @@ Behind a reverse proxy at http://myhost/myprefix/.well-known/openid-configuratio
       - prefix=/myprefix
 ```
 
-To have a second redirect_uri, useful for silent renews, use:
+To add a second redirect_uri, useful for silent renews, use:
 ```yaml
       - CLIENT_SILENT_REDIRECT_URI=http://localhost:8080/renewcb
+```
+
+To add a second client (optional) use:
+```yaml
+      - CLIENT_ID_2=my-client_2
+      - CLIENT_REDIRECT_URI_2=http://localhost:8081/cb
+      - CLIENT_LOGOUT_REDIRECT_URI_2=http://localhost:8081
+      - CLIENT_SILENT_REDIRECT_URI_2=http://localhost:8081/renewcb
 ```
 
 ## Dev
