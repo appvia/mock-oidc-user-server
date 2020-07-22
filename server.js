@@ -37,12 +37,12 @@ const oidcConfig = {
   async findAccount(ctx, id) {
     return {
       accountId: id,
-      async claims() { return { sub: id, name: id }; },
+      async claims() { return { sub: id, name: id, email: id + '@rte-france.com' }; },
     };
   },
   claims: {
     openid: [
-      'sub', 'name'
+      'sub', 'name', 'email'
     ],
   },
   responseTypes: ['id_token token'],
