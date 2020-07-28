@@ -76,6 +76,6 @@ oidc.Client.Schema.prototype.invalidate = function invalidate(message, code) {
 };
 
 const app = new Koa();
-app.use(mount(configClient1.prefix, oidc.app));
+app.use(mount(prefix, oidc.app));
 
 app.listen(port);
