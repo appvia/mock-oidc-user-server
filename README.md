@@ -21,6 +21,7 @@ services:
     image: quay.io/appvia/mock-oidc-user-server:v0.0.2
     environment:
       - PORT=9090
+      - HOST=localhost
       - CLIENT_ID=my-client
       - CLIENT_SECRET=my-secret
       - CLIENT_REDIRECT_URI=http://localhost:8080/cb
